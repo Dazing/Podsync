@@ -78,7 +78,7 @@ feed(rss_url, function(err, articles) {
 
 function fileNameFormater(title) {
 	// Remove all special characters but space
-	fileTitle = articles[i].title.replace(/[^a-zA-Z ]/g, '');
+	fileTitle = title.replace(/[^a-zA-Z ]/g, '');
 	// Replace all spaces with underscore
 	fileTitle = fileTitle.replace(/ /gi,'_')
 	// Append '.mp3'
