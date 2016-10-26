@@ -23,7 +23,7 @@ feed(rss_url, function(err, articles) {
 
   		var opt = {
   			cwd: podfolder
-  		} 
+  		}
   		console.log("df");
 
   		for (var i = 0; i < articles.length-1; i++) {
@@ -43,33 +43,40 @@ feed(rss_url, function(err, articles) {
   			}
   			else {
 				wget = spawnSync(
-						'wget', 
-						[	'--no-verbose', 
+						'wget',
+						[	'--no-verbose',
 							'--output-document='+filename,
 							articles[i].link
 							],
 						opt
 					);
- 				
-				// If wget failed: try once more. 
+
+				// If wget failed: try once more.
                 // TODO Add failed to list and stop downloading on fileexists
                 // TODO And then check failed "download.log".
 				if (wget.status != 0) {
 					wget = spawnSync(
-							'wget', 
-							[	'--no-verbose', 
+							'wget',
+							[	'--no-verbose',
 								'--output-document='+filename,
 								articles[i].link
-								], 
+								],
 							opt
 						);
 				}
 
   			}
-  		
+
   		}
 
   	}
 });
 
 
+/*
+
+fs.readFileSync("file.txt").toString().split("\n").forEach(function(line, index, arr) {
+  if (index === arr.length - 1 && line === "") { return; }
+  console.log(index + " " + line);
+});
+*/
