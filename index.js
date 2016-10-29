@@ -45,15 +45,6 @@ feed(rss_url, function(err, entries) {
 
   			// If file does exist, end loop and retry previusly failed pods
   			if (fileExist) {
-                // TODO TESTING START
-				var failedEntry = {
-					entry: entries[i],
-					attempts: 0
-				}
-				failedList.push(JSON.stringify(failedEntry));
-                // TODO TESTING END
-
-
   				break;
   			}
   			else {
@@ -66,7 +57,8 @@ feed(rss_url, function(err, entries) {
 				// If download failed: add to log for attempt later
 				if (downloadSuccces != 0) {
 					failedList.push(JSON.stringify(entries[i]));
-				} // End wget failed statement
+
+                } // End download failed statement
 
   			} // End file does not exist statement
 
@@ -98,14 +90,8 @@ feed(rss_url, function(err, entries) {
                 continue;
             }
 
-            console.log("LOGGING faillogLines["+i+"]: \n\n ");
-            console.log("'"+faillogLines[i]+"'");
-            console.log("------------------------------------------------");
-
             attemptEntry = JSON.parse(faillogLines[i]);
-            console.log("LOGGING stringify of attemptEntry.title: \n\n ");
-            console.log("'"+JSON.stringify(attemptEntry.entry.title)+"'");
-            console.log("------------------------------------------------");
+
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
 				continue;
