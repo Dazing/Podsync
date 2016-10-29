@@ -100,8 +100,10 @@ feed(rss_url, function(err, entries) {
 
 			// TODO TEST
             if (failogLines[j] != "") {
-                attemptEntry = JSON.parse(failogLines[j]);
+                continue;
             }
+
+            attemptEntry = JSON.parse(failogLines[j]);
 
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
