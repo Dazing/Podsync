@@ -103,6 +103,10 @@ feed(rss_url, function(err, entries) {
                 continue;
             }
 
+            console.log("LOGGING failogLines[j]: \n\n ");
+            console.log(failogLines[j]);
+            console.log("------------------------------------------------");
+
             attemptEntry = JSON.parse(failogLines[j]);
 
 			if (attemptEntry.attempts > 72) {
