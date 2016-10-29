@@ -76,12 +76,7 @@ catch (errAcc) {
     }
 }
 
-setMetaData(
-    '/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3',
-    'Has The Latest Mars Ladner Failed',
-    '2016-03-26',
-    'Science In Action'
-);
+
 setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
@@ -142,11 +137,11 @@ function downloadPodcast(podcastUrl, podFolder) {
                     }
                     // If successful set meta data
                     else {
-                        /*setMetaData(podFolder+fileName,
+                        setMetaData(podFolder+fileName,
                             entries[i].title,
                             entries[i].published,
                             entries[i].feed.name
-                        );*/
+                        );
                     }
       			} // End file does not exist statement
 
@@ -289,7 +284,8 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
     console.log("setmetadata");
     var data = {
-        title: fileTitle
+        title: fileTitle,
+        album: podcastName
     }
     var success = nodeID3.write(data, fileUrl);
     console.log("setMetaData: " + success);
