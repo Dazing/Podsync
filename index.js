@@ -18,12 +18,34 @@ var opt = {
 };
 
 rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
+/*
+var subFolder;
+var podUrl;
+for (var i = 0; i < config.podcastList.length; i++) {
+    subFolder = config.podcastList[i].folderName;
+    podUrl = config.podcastList[i].url;
+    if (config.useSubFolders) {
+        try {
+            fs.accessSync(config.masterFolder+subFolder, fs.constants.F_OK);
+        }
+        // Catch error and set varibles accordningly
+        catch (error) {
+            // File dooes not exist
+            if (error.code === "ENOENT") {
+                console.log("ENOENT for "+fileName);
 
-//for (var i = 0; i < podcastList.length; i++) {
-//    downloadPodcast(podcastList[i].rssUrl,podcastList[i].localPath);
-//}
+            }
+            // General error clause
+            else {
+                throw error;
+            }
+        }
+    }
 
-function downloadPodcast(podcastUrl, podFolder) {
+    downloadPodcast(subFolder, podUrl);
+}
+*/
+//function downloadPodcast(podcastUrl, podFolder) {
 
     feed(podcastUrl, function(err, entries) {
 
@@ -153,7 +175,7 @@ function downloadPodcast(podcastUrl, podFolder) {
     		file.end();
     	}
     });
-}
+//}
 
 /*
     Function downloadFile
