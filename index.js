@@ -174,9 +174,9 @@ function downloadFile(fileUrl, fileDestUrl, options) {
 		);
     */
 
-    var file = fs.createWriteStream
+    var file = fs.createWriteStream(fileDestUrl);
     var request = http.get(fileUrl, function (resp){
-        resp.pipe(fileDestUrl)
+        resp.pipe(file)
     }).on('error', function (err){
         // Delete the file on error (async)
         fs.unlink(fileDestUrl);
