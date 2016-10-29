@@ -28,17 +28,19 @@ feed(rss_url, function(err, entries) {
    			fileName = fileNameFormater(entries[i].title);
 
             //fileExist = fs.statSync(podFolder+fileName, (error);
-            fs.accessSync(podFolder+fileName, fs.constants.F_OK, (err,fd) => {
-                if (err.code === "ENOENT") {
-                    fileExist = false;
-                    return;
+            try {
+                fs.accessSync(podFolder+fileName, fs.constants.F_OK);
+                fileExist = true;
+            }
+            catch (error) {
+                if (error === "ENOENT") {
+                    fileExist = false
                 }
                 else {
-                    throw err;
-                    fileExist = true;
-                    return;
+                    throw error;
                 }
-            });
+            }
+
             console.log(fileExist);
   			console.log("i:"+i+", "+fileName+", "+fileExist+"\n");
 
