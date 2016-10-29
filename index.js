@@ -47,7 +47,6 @@ for (var i = 0; i < config.podcastList.length; i++) {
         catch (errAcc) {
             // File dooes not exist
             if (errAcc.code === "ENOENT") {
-                console.log("ENOENT for "+fileName);
                 // Create subfolder
                 try {fs.mkdirSync(config.masterFolder+subFolder)}
                 catch (errDir) {console.log(errDir);}
@@ -65,7 +64,7 @@ setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
-        subFolder = config.masterFolder +"/"+ config.podcastList[g].folderName
+        subFolder = config.masterFolder + config.podcastList[g].folderName + "/"
         downloadPodcast(
             config.podcastList[g].url,
             subFolder
