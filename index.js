@@ -27,14 +27,13 @@ feed(rss_url, function(err, entries) {
   		for (var i = 0; i < entries.length-1; i++) {
    			fileName = fileNameFormater(entries[i].title);
 
-            //fileExist = fs.statSync(podFolder+fileName, (error);
             try {
                 fs.accessSync(podFolder+fileName, fs.constants.F_OK);
                 fileExist = true;
             }
             catch (error) {
                 if (error.code === "ENOENT") {
-                    console.log("ENOENT for"+fileName);
+                    console.log("ENOENT for "+fileName);
                     fileExist = false
                 }
                 else {
@@ -43,9 +42,7 @@ feed(rss_url, function(err, entries) {
                 }
             }
 
-
-
-  			// If file does exist, end loop and retry previusly failed pods
+ 			// If file does exist, end loop and retry previusly failed pods
   			if (fileExist) {
   				break;
   			}
@@ -58,7 +55,11 @@ feed(rss_url, function(err, entries) {
 
 				// If download failed: add to log for attempt later
 				if (downloadSuccces != 0) {
-					failedList.push(JSON.stringify(entries[i]));
+                    failedEntry = {
+                        entry : entries[i],
+                        attempts : 0
+                    }
+					failedList.push(JSON.stringify(failedEntry));
 
                 } // End download failed statement
 
