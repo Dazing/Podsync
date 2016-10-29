@@ -61,7 +61,7 @@ for (var i = 0; i < config.podcastList.length; i++) {
 }
 
 downloadStart()
-setInterval(downloadStart(), config.interval * 60000);
+setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
