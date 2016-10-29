@@ -262,12 +262,12 @@ function downloadFile(fileUrl, fileDestUrl) {
 
 function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
-    console.log(fileDate);
+    console.log("setmetadata");
     var data = {
         title: fileTitle
     }
 
-    ffmetadata.write(fileUrl, data, function (err) {
+    ffmetadata.write(fileUrl, data,{}, function (err) {
         if (err) console.log(err);
         else console.log(data +" written");
     })
