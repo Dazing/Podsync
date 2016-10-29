@@ -262,7 +262,6 @@ function downloadFile(fileUrl, fileDestUrl) {
 
 function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
-    fileDate = fileDate.toString().slice(0,10);
     console.log(fileDate);
     var data = {
         title: fileTitle,
