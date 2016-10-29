@@ -283,7 +283,7 @@ function downloadFile(fileUrl, fileDestUrl) {
 
 function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
-    console.log("setmetadata");
+    console.log("setmetadata for fileUrl: "+fileUrl+", fileTitle: "+fileTitle+", album: "+podcastName);
     var data = {
         title: fileTitle,
         album: podcastName
