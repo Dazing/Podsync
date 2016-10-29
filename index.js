@@ -257,10 +257,7 @@ function fileNameFormater(title) {
 
 function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
     var file = fs.createWriteStream(fileDestUrl);
-
-    request(fileUrl).pipe(fs.createWriteStream(fileDestUrl))
-
-    /*var res = http.get(fileUrl, function (resp){
+    var res = http.get(fileUrl, function (resp){
         resp.pipe(file)
     });
     res.on('error', function (err){
@@ -276,7 +273,7 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
             podcastName
         );
         return 0;
-    });*/
+    });
 }
 
 
@@ -292,6 +289,11 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
 
 function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
+
+    var read = nodeID3.read(fileUrl);
+
+    //returns tags
+    console.log(read);
     console.log("setmetadata for fileUrl: "+fileUrl+", fileTitle: "+fileTitle+", album: "+podcastName);
     var data = {
         title: fileTitle.toString(),
@@ -300,10 +302,7 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     var success = nodeID3.write(data, fileUrl);
     console.log("setMetaData: " + success);
 
-    var read = nodeID3.read(fileUrl);
 
-    //returns tags
-    console.log(read);
 }
 
 
