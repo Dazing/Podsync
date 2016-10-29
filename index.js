@@ -106,7 +106,7 @@ function downloadPodcast(podcastUrl, podFolder) {
       			}
       			else {
     				downloadSuccces = downloadFile(
-                        .link,
+                        entries[i].link,
                         podFolder+fileName
                     );
 
