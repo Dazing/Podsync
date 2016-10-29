@@ -124,7 +124,10 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
       			else {
     				downloadSuccces = downloadFile(
                         entries[i].link,
-                        podFolder+fileName
+                        podFolder+fileName,
+                        entries[i].title,
+                        entries[i].published,
+                        podcastName
                     );
 
     				// If download failed: add to log for attempt later
@@ -136,14 +139,7 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     					failedList.push(JSON.stringify(failedEntry));
 
                     }
-                    // If successful set meta data
-                    else {
-                        setMetaData(podFolder+fileName,
-                            entries[i].title,
-                            entries[i].published,
-                            podcastName
-                        );
-                    }
+                    
       			} // End file does not exist statement
 
       		} // End RSS entry loop
@@ -258,16 +254,25 @@ function fileNameFormater(title) {
 
 */
 
-function downloadFile(fileUrl, fileDestUrl) {
+function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
     var file = fs.createWriteStream(fileDestUrl);
     var request = http.get(fileUrl, function (resp){
         resp.pipe(file)
-    }).on('error', function (err){
+    });
+    request.on('error', function (err){
         // Delete the file on error (async)
+        console.log("Error on download");
         fs.unlink(fileDestUrl);
         return 1;
     });
-	return 0;
+    request.on('finish', function (err){
+        setMetaData(fileDestUrl,
+            fileTitle,
+            fileDate,
+            podcastName
+        );
+        return 0;
+    });
 }
 
 
