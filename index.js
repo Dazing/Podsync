@@ -2,7 +2,7 @@ var feed = require("feed-read");
 var spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
-var ffmetadata = require('ffmetadata');
+var nodeID3 = require('node-id3');
 var config = require('./config.json')
 
 var downloadSuccces;
@@ -276,11 +276,8 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     var data = {
         title: fileTitle
     }
-
-    ffmetadata.write(fileUrl, data,{}, function (err) {
-        if (err) console.log(err);
-        else console.log(data +" written");
-    })
+    var success = nodeID3.write(data, fileUrl);
+    console.log("setMetaData: " + success);
 }
 
 
