@@ -99,11 +99,13 @@ feed(rss_url, function(err, entries) {
 			// Attempt to download again, with 3 days limit.
 
 			// TODO TEST
-            if (failogLines[j] != "") {
-                continue;
+            console.log("j="+j+", faillogLines.length="+faillogLines.length);
+	    if (failogLines[j] == "") {
+               	console.log("if empty for j = "+j);
+		continue;
             }
 
-            console.log("LOGGING failogLines[j]: \n\n ");
+            console.log("LOGGING failogLines["+j+"]: \n\n ");
             console.log("'"+failogLines[j]+"'");
             console.log("------------------------------------------------");
 
