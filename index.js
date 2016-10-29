@@ -99,7 +99,10 @@ feed(rss_url, function(err, entries) {
 			// Attempt to download again, with 3 days limit.
 
 			// TODO TEST
-			attemptEntry = JSON.parse(failogLines[j]);
+            if (failogLines[j] != "") {
+                attemptEntry = JSON.parse(failogLines[j]);
+            }
+
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
 				continue;
