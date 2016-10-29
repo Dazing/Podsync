@@ -269,6 +269,7 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
 
     ffmetadata.write(fileUrl, data, function (err) {
         if (err) console.log(err);
+        else console.log(data +" written");
     })
 }
 
