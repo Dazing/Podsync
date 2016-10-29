@@ -1,5 +1,18 @@
-{
-    "masterFolder" : "path",
+{   
+    "masterFolder" : "",
     "useSubFolders": true,
-    "podcastList" : [{"url": "link", "folderName": "folder"}]
+    "podcastList" : [
+        {
+            "url": "http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss",
+            "folderName": "Science_In_Action"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss",
+            "folderName": "Science_In_Action"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss",
+            "folderName": "Science_In_Action"
+        },
+    ]
 }

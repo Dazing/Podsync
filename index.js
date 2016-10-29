@@ -19,8 +19,6 @@ var opt = {
 
 rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
 
-console.log(config.masterFolder);
-
 //for (var i = 0; i < podcastList.length; i++) {
 //    downloadPodcast(podcastList[i].rssUrl,podcastList[i].localPath);
 //}
