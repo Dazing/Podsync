@@ -61,6 +61,22 @@ for (var i = 0; i < config.podcastList.length; i++) {
 }
 
 downloadStart();
+try {
+    fs.accessSync("/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3", fs.constants.F_OK);
+}
+// Catch error and set varibles accordningly
+catch (errAcc) {
+    // File dooes not exist
+    if (errAcc.code === "ENOENT") {
+        // Create master folder
+        catch (errDir) {console.log(errDir);}
+    }
+    // General error clause
+    else {
+        throw errAcc;
+    }
+}
+
 setMetaData(
     '/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3',
     'Has The Latest Mars Ladner Failed',
