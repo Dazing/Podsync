@@ -9,7 +9,7 @@ var fileTitle = '';
 var fileExist = false;
 var faillog = 'faillog.txt';
 var failedList = [];
-var failogLines;
+var faillogLines;
 
 var podFolder = '/srv/samba/ArcServer/Media/Podcasts/';
 var opt = {
@@ -74,16 +74,16 @@ feed(rss_url, function(err, entries) {
 
   		} // End RSS entry loop
 
-		failogLines = fs.readFileSync(faillog).toString().split('\n');
+		faillogLines = fs.readFileSync(faillog).toString().split('\n');
 		var tmpLineLink;
 		var attemptEntry;
 
-		for (var i = 0; i < failogLines.length; i++) {
+		for (var i = 0; i < faillogLines.length; i++) {
 
 			// TODO TEST
 			// Remove the entry from failedList if already in the faillog file
 			for (var j = 0; j < failedList.length; j++) {
-				tmpLineLink = failogLines[i];
+				tmpLineLink = faillogLines[i];
 				console.log("\n\n MATCHING");
 				var test = 1+(parseInt(failedList[j].attempts));
 				//console.log(parseInt(failedList[j].attempts));
@@ -100,16 +100,16 @@ feed(rss_url, function(err, entries) {
 
 			// TODO TEST
             console.log("j="+j+", faillogLines.length="+faillogLines.length);
-	    if (failogLines[j] == "") {
-               	console.log("if empty for j = "+j);
-		continue;
+    	    if (faillogLines[j] == "") {
+                console.log("if empty for j = "+j);
+                continue;
             }
 
-            console.log("LOGGING failogLines["+j+"]: \n\n ");
-            console.log("'"+failogLines[j]+"'");
+            console.log("LOGGING faillogLines["+j+"]: \n\n ");
+            console.log("'"+faillogLines[j]+"'");
             console.log("------------------------------------------------");
 
-            attemptEntry = JSON.parse(failogLines[j]);
+            attemptEntry = JSON.parse(faillogLines[j]);
 
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
@@ -129,14 +129,14 @@ feed(rss_url, function(err, entries) {
 				}
 				// Attempt to download file successful: remove it from file.
 				else {
-					failogLines.splice(i,1);
+					faillogLines.splice(i,1);
 					continue;
 				}
 			}
 		}
 
 		// Append remaining list to file
-		Array.prototype.push.apply(failogLines, failedList);
+		Array.prototype.push.apply(faillogLines, failedList);
 		// Write to file;
 		var file = fs.createWriteStream('array.txt');
 
@@ -144,8 +144,8 @@ feed(rss_url, function(err, entries) {
 			console.log('Fail for write stream');
 		});
 
-		for (var i = 0; i < failogLines.length; i++) {
-			file.write(failogLines[i] + '\n');
+		for (var i = 0; i < faillogLines.length; i++) {
+			file.write(faillogLines[i] + '\n');
 		}
 
 		file.end();
