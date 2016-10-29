@@ -117,15 +117,19 @@ feed(rss_url, function(err, entries) {
 			}
 			else {
 				// Get proper fileName
-				fileName = fileNameFormater(attemptEntry);
+				fileName = fileNameFormater(attemptEntry.title);
 				// Run the wget command to download
-				downloadSuccces = downloadFile(attemptEntry.link,fileName,opt);
+				downloadSuccces = downloadFile(
+                    attemptEntry.link,
+                    podFolder+fileName,
+                    opt
+                );
 
 				// Attempt to download file NOT successful:
 				// increment attemps variable, change in array for write back
-				if (wget != 0) {
+				if (downloadSuccces != 0) {
 					attemptEntry.attempts = attemptEntry.attempts + 1;
-					failedList[j] = JSON.stringify(attemptEntry);
+					faillogLines[i] = JSON.stringify(attemptEntry);
 				}
 				// Attempt to download file successful: remove it from file.
 				else {
