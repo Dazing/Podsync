@@ -164,7 +164,7 @@ for (var i = 0; i < config.podcastList.length; i++) {
     		// Write to file;
     		var file = fs.createWriteStream('faillog.txt');
     		file.on('error', function(err) {
-    			console.log('Fail for write stream');
+    			console.log('Fail for write stream:'+err);
     		});
 
             // Write each line to file, speparete entrie with line break ()
