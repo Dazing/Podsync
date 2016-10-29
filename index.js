@@ -106,7 +106,7 @@ function downloadPodcast(podcastUrl, podFolder) {
       			}
       			else {
     				downloadSuccces = downloadFile(
-                        entries[i].link,
+                        .link,
                         podFolder+fileName
                     );
 
@@ -122,9 +122,9 @@ function downloadPodcast(podcastUrl, podFolder) {
                     // If successful set meta data
                     else {
                         setMetaData(podFolder+fileName,
-                            attemptEntry.entry.title,
-                            attemptEntry.entry.published,
-                            attemptEntry.entry.feed.name
+                            entries[i].title,
+                            entries[i].published,
+                            entries[i].feed.name
                         );
                     }
       			} // End file does not exist statement
