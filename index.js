@@ -99,17 +99,17 @@ feed(rss_url, function(err, entries) {
 			// Attempt to download again, with 3 days limit.
 
 			// TODO TEST
-            console.log("j="+j+", faillogLines.length="+faillogLines.length);
-    	    if (faillogLines[j] == "") {
-                console.log("if empty for j = "+j);
+            console.log("j="+i+", faillogLines.length="+faillogLines.length);
+    	    if (faillogLines[i] == "") {
+                console.log("if empty for j = "+i);
                 continue;
             }
 
-            console.log("LOGGING faillogLines["+j+"]: \n\n ");
-            console.log("'"+faillogLines[j]+"'");
+            console.log("LOGGING faillogLines["+i+"]: \n\n ");
+            console.log("'"+faillogLines[i]+"'");
             console.log("------------------------------------------------");
 
-            attemptEntry = JSON.parse(faillogLines[j]);
+            attemptEntry = JSON.parse(faillogLines[i]);
 
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
