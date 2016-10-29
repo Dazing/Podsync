@@ -2,6 +2,7 @@ var feed = require("feed-read");
 var spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
+var config = require(./config.js)
 
 var downloadSuccces;
 var fileName = '';
@@ -18,129 +19,143 @@ var opt = {
 
 rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
 
+console.log(config.masterFolder);
 
-feed(rss_url, function(err, entries) {
+//for (var i = 0; i < podcastList.length; i++) {
+//    downloadPodcast(podcastList[i].rssUrl,podcastList[i].localPath);
+//}
 
-  	if (err) throw err;
-  	else {
+function downloadPodcast(podcastUrl, podFolder) {
 
-  		for (var i = 0; i < entries.length-1; i++) {
-   			fileName = fileNameFormater(entries[i].title);
+    feed(podcastUrl, function(err, entries) {
 
-            try {
-                fs.accessSync(podFolder+fileName, fs.constants.F_OK);
-                fileExist = true;
-            }
-            catch (error) {
-                if (error.code === "ENOENT") {
-                    console.log("ENOENT for "+fileName);
-                    fileExist = false
+      	if (err) throw err;
+      	else {
+      		for (var i = 0; i < entries.length-1; i++) {
+       			fileName = fileNameFormater(entries[i].title);
+
+                // Check if the file already exists
+                try {
+                    fs.accessSync(podFolder+fileName, fs.constants.F_OK);
+                    fileExist = true;
                 }
-                else {
-                    console.log(error);
-                    throw error;
-                }
-            }
-
- 			// If file does exist, end loop and retry previusly failed pods
-  			if (fileExist) {
-  				break;
-  			}
-  			else {
-				downloadSuccces = downloadFile(
-                    entries[i].link,
-                    podFolder+fileName,
-                    opt
-                );
-
-				// If download failed: add to log for attempt later
-				if (downloadSuccces != 0) {
-                    failedEntry = {
-                        entry : entries[i],
-                        attempts : 0
+                // Catch error and set varibles accordningly
+                catch (error) {
+                    // File dooes not exist
+                    if (error.code === "ENOENT") {
+                        console.log("ENOENT for "+fileName);
+                        fileExist = false
                     }
-					failedList.push(JSON.stringify(failedEntry));
+                    // General error clause
+                    else {
+                        throw error;
+                    }
+                }
 
-                } // End download failed statement
+     			// If file does exist, end loop and retry previusly failed pods
+      			if (fileExist) {
+      				break;
+      			}
+      			else {
+    				downloadSuccces = downloadFile(
+                        entries[i].link,
+                        podFolder+fileName,
+                        opt
+                    );
 
-  			} // End file does not exist statement
+    				// If download failed: add to log for attempt later
+    				if (downloadSuccces != 0) {
+                        failedEntry = {
+                            entry : entries[i],
+                            attempts : 0
+                        }
+    					failedList.push(JSON.stringify(failedEntry));
 
-  		} // End RSS entry loop
+                    } // End download failed statement
 
-		faillogLines = fs.readFileSync(faillog).toString().split('\n');
-		var tmpLineLink;
-		var attemptEntry;
+      			} // End file does not exist statement
 
-		for (var i = 0; i < faillogLines.length; i++) {
-            console.log("faillogLines: " + faillogLines);
+      		} // End RSS entry loop
 
-			// TODO TEST
-			// Remove the entry from failedList if already in the faillog file
-			for (var j = 0; j < failedList.length; j++) {
-				tmpLineLink = faillogLines[i];
-				console.log("\n\n MATCHING");
-				var test = 1+(parseInt(failedList[j].attempts));
-				if (failedList[j].entry === tmpLineLink.entry) {
-					failedList.splice(j,1);
+            // Read faillog file
+    		faillogLines = fs.readFileSync(faillog).toString().split('\n');
+    		var tmpLineLink;
+    		var attemptEntry;
 
-				}
-			}
+            // Attempt to download failed files.
+    		for (var i = 0; i < faillogLines.length; i++) {
 
-			// -------------------------------------------------
-			// Attempt to download again, with 3 days limit.
+    			// Remove the entry from failedList if already in the faillog file
+    			for (var j = 0; j < failedList.length; j++) {
+    				tmpLineLink = faillogLines[i];
+    				console.log("\n\n MATCHING");
+    				var test = 1+(parseInt(failedList[j].attempts));
+    				if (failedList[j].entry === tmpLineLink.entry) {
+    					failedList.splice(j,1);
 
-			// TODO TEST
-    	    if (faillogLines[i] == "") {
-                continue;
-            }
+    				}
+    			}
 
-            attemptEntry = JSON.parse(faillogLines[i]);
+    			// -------------------------------------------------
+    			// Attempt to download again, with 3 (1 attempt per hour)days limit.
 
-			if (attemptEntry.attempts > 72) {
-				failedList.splice(i,1);
-				continue;
-			}
-			else {
-				// Get proper fileName
-				fileName = fileNameFormater(attemptEntry.entry.title);
-				// Run the wget command to download
-				downloadSuccces = downloadFile(
-                    attemptEntry.entry.link,
-                    podFolder+fileName,
-                    opt
-                );
+    			// Skip iteration if the entry is empty
+        	    if (faillogLines[i] == "") {
+                    continue;
+                }
 
-				// Attempt to download file NOT successful:
-				// increment attemps variable, change in array for write back
-				if (downloadSuccces != 0) {
-					attemptEntry.attempts = attemptEntry.attempts + 1;
-					faillogLines[i] = JSON.stringify(attemptEntry);
-				}
-				// Attempt to download file successful: remove it from file.
-				else {
-					faillogLines.splice(i,1);
-					continue;
-				}
-			}
-		}
+                // Turn string from file into JSON
+                attemptEntry = JSON.parse(faillogLines[i]);
 
-		// Append remaining list to file
-		Array.prototype.push.apply(faillogLines, failedList);
-		// Write to file;
-		var file = fs.createWriteStream('array.txt');
+                // Limit for attempts, if more then 72 attempts has been done,
+                // remove it from the list/file.
+    			if (attemptEntry.attempts > 72) {
+    				failedList.splice(i,1);
+    				continue;
+    			}
+    			else {
+    				// Get proper fileName
+    				fileName = fileNameFormater(attemptEntry.entry.title);
 
-		file.on('error', function(err) {
-			console.log('Fail for write stream');
-		});
+                    // Attempt to download the file
+    				downloadSuccces = downloadFile(
+                        attemptEntry.entry.link,
+                        podFolder+fileName,
+                        opt
+                    );
 
-		for (var i = 0; i < faillogLines.length; i++) {
-			file.write(faillogLines[i] + '\n');
-		}
+    				// Attempt to download file NOT successful:
+    				// increment attemps variable, change in array for write back
+    				if (downloadSuccces != 0) {
+    					attemptEntry.attempts = attemptEntry.attempts + 1;
+    					faillogLines[i] = JSON.stringify(attemptEntry);
+    				}
+    				// Attempt to download file successful: remove it from file.
+    				else {
+    					faillogLines.splice(i,1);
+    					continue;
+    				}
+    			}
+    		} // End attempt to download failed files.
 
-		file.end();
-	}
-});
+    		// Append remaining list to file
+    		Array.prototype.push.apply(faillogLines, failedList);
 
+    		// Write to file;
+    		var file = fs.createWriteStream('faillog.txt');
+    		file.on('error', function(err) {
+    			console.log('Fail for write stream');
+    		});
+
+            // Write each line to file, speparete entrie with line break ()
+    		for (var i = 0; i < faillogLines.length; i++) {
+    			file.write(faillogLines[i] + '\n');
+    		}
+
+    		file.end();
+    	}
+    });
+}
 
 /*
     Function downloadFile

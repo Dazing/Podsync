@@ -1,0 +1,6 @@
+{
+    "masterFolder" : "path",
+    "useSubFolders": true,
+    "podcastList" : [{"url": "link", "folderName": "folder"}],
+    ""
+}
