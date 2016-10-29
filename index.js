@@ -174,8 +174,6 @@ function downloadFile(fileUrl, fileDestUrl, options) {
 }
 
 function fileNameFormater(title) {
-    console.log(title);
-    console.log((title === "sting"));
 	// Remove all special characters but space
 	title = title.replace(/[^a-zA-Z ]/g, '');
 	// Replace all spaces with underscore
