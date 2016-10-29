@@ -7,7 +7,7 @@ Simple Node JS client for continously downloading podcasts to your media server/
     "useSubFolders": true,
         Boolean (true/false), if true put podcasts in subfolders (name defined in list of podcasts) in masterFolder.
     "interval": 60,
-        Interval of where to to check for new episodes/retry old ones, in minutes.
+        Interval for checking for new episodes/retry old ones (in minutes).
     "podcastList" : [
         {
             "url": "rss_url_to_podcast",

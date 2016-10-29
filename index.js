@@ -2,6 +2,7 @@ var feed = require("feed-read");
 var spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
+var ffmetadata = require('ffmetadata');
 var config = require('./config.json')
 
 var downloadSuccces;
@@ -117,8 +118,15 @@ function downloadPodcast(podcastUrl, podFolder) {
                         }
     					failedList.push(JSON.stringify(failedEntry));
 
-                    } // End download failed statement
-
+                    }
+                    // If successful set meta data
+                    else {
+                        setMetaData(podFolder+fileName,
+                            attemptEntry.entry.title,
+                            attemptEntry.entry.published,
+                            attemptEntry.entry.feed.name
+                        );
+                    }
       			} // End file does not exist statement
 
       		} // End RSS entry loop
@@ -168,6 +176,8 @@ function downloadPodcast(podcastUrl, podFolder) {
                         podFolder+fileName
                     );
 
+
+
     				// Attempt to download file NOT successful:
     				// increment attemps variable, change in array for write back
     				if (downloadSuccces != 0) {
@@ -176,6 +186,12 @@ function downloadPodcast(podcastUrl, podFolder) {
     				}
     				// Attempt to download file successful: remove it from file.
     				else {
+                        setMetaData(podFolder+fileName,
+                            attemptEntry.entry.title,
+                            attemptEntry.entry.published,
+                            attemptEntry.entry.feed.name
+                        );
+
     					faillogLines.splice(i,1);
     					continue;
     				}
@@ -201,6 +217,16 @@ function downloadPodcast(podcastUrl, podFolder) {
     });
 }
 
+function fileNameFormater(title) {
+	// Remove all special characters but space
+	title = title.replace(/[^a-zA-Z ]/g, '');
+	// Replace all spaces with underscore
+	title = title.replace(/ /gi,'_')
+	// Append '.mp3'
+	title = title + '.mp3';
+	return title;
+}
+
 /*
     Function downloadFile
 
@@ -210,6 +236,7 @@ function downloadPodcast(podcastUrl, podFolder) {
     @return 0,1         0 = success, 1 = fail.
 
 */
+
 function downloadFile(fileUrl, fileDestUrl) {
     var file = fs.createWriteStream(fileDestUrl);
     var request = http.get(fileUrl, function (resp){
@@ -222,15 +249,31 @@ function downloadFile(fileUrl, fileDestUrl) {
 	return 0;
 }
 
-function fileNameFormater(title) {
-	// Remove all special characters but space
-	title = title.replace(/[^a-zA-Z ]/g, '');
-	// Replace all spaces with underscore
-	title = title.replace(/ /gi,'_')
-	// Append '.mp3'
-	title = title + '.mp3';
-	return title;
+
+/*
+    Function setMetaData
+
+    @param  fileUrl     url to the file for download
+    @param  fileDestUrl path+name of file
+
+    @return 0,1         0 = success, 1 = fail.
+
+*/
+
+function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
+    // TODO Format date 2016-10-20T21:32:00.000Z
+    fileDate = fileDate.slice(0,9);
+    console.log(fileDate);
+    var data = {
+        title: fileTitle,
+        album: podcastName,
+        date: fileDate,
+    }
+    ffmetadata.write(fileUrl, data, opt, function (err) {
+        if (err) console.log(err);
+    })
 }
+
 
 /*
 
