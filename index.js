@@ -291,7 +291,7 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     console.log("setmetadata for fileUrl: "+fileUrl+", fileTitle: "+fileTitle+", album: "+podcastName);
     var data = {
         title: fileTitle.toString(),
-        album: podcastName
+        album: podcastName.toString()
     }
     var success = nodeID3.write(data, fileUrl);
     console.log("setMetaData: " + success);
