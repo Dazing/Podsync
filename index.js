@@ -34,9 +34,11 @@ feed(rss_url, function(err, entries) {
             }
             catch (error) {
                 if (error.code === "ENOENT") {
+                    console.log("ENOENT for"+fileName);
                     fileExist = false
                 }
                 else {
+                    console.log(error);
                     throw error;
                 }
             }
