@@ -47,7 +47,7 @@ for (var i = 0; i < config.podcastList.length; i++) {
 */
 //function downloadPodcast(podcastUrl, podFolder) {
 
-    feed(podcastUrl, function(err, entries) {
+    feed(rss_url, function(err, entries) {
 
       	if (err) throw err;
       	else {
