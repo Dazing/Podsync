@@ -33,7 +33,7 @@ feed(rss_url, function(err, entries) {
                 fileExist = true;
             }
             catch (error) {
-                if (error === "ENOENT") {
+                if (error.code === "ENOENT") {
                     fileExist = false
                 }
                 else {
