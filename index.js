@@ -293,6 +293,11 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     }
     var success = nodeID3.write(data, fileUrl);
     console.log("setMetaData: " + success);
+
+    var read = nodeID3.read(fileUrl);
+
+    //returns tags
+    console.log(read);
 }
 
 
