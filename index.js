@@ -30,7 +30,7 @@ feed(rss_url, function(err, entries) {
             //fileExist = fs.statSync(podFolder+fileName, (error);
             fileExist = fs.accessSync(path, fs.constants.F_OK, (err) => {
                 console.log(err);
-            }):
+            })
             console.log(fileExist);
   			console.log("i:"+i+", "+fileName+", "+fileExist+"\n");
 
