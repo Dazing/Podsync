@@ -264,8 +264,7 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
     console.log(fileDate);
     var data = {
-        title: fileTitle,
-        album: podcastName
+        title: fileTitle
     }
 
     ffmetadata.write(fileUrl, data, function (err) {
