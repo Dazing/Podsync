@@ -4,6 +4,7 @@ var fs = require('fs');
 var http = require('http');
 var nodeID3 = require('node-id3');
 var config = require('./config.json')
+var request = require('request');
 
 var downloadSuccces;
 var fileName = '';
@@ -256,23 +257,26 @@ function fileNameFormater(title) {
 
 function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
     var file = fs.createWriteStream(fileDestUrl);
-    var request = http.get(fileUrl, function (resp){
+
+    request(fileUrl).pipe(fs.createWriteStream(fileDestUrl))
+
+    /*var res = http.get(fileUrl, function (resp){
         resp.pipe(file)
     });
-    request.on('error', function (err){
+    res.on('error', function (err){
         // Delete the file on error (async)
         console.log("Error on download");
         fs.unlink(fileDestUrl);
         return 1;
     });
-    request.on('finish', function (err){
-        setMetaData(fileDestUrl,
+    setMetaData(fileDestUrl,
+    res.on('finish', function (err){
             fileTitle,
             fileDate,
             podcastName
         );
         return 0;
-    });
+    });*/
 }
 
 
