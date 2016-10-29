@@ -84,12 +84,13 @@ function downloadStart(){
         subFolder = config.masterFolder + config.podcastList[g].folderName + "/"
         downloadPodcast(
             config.podcastList[g].url,
-            subFolder
+            subFolder,
+            config.podcastList[g].podcastName
         )
     }
 }
 
-function downloadPodcast(podcastUrl, podFolder) {
+function downloadPodcast(podcastUrl, podFolder, podcastName) {
     console.log("podFolder: " + podFolder);
     feed(podcastUrl, function(err, entries) {
 
@@ -140,7 +141,7 @@ function downloadPodcast(podcastUrl, podFolder) {
                         setMetaData(podFolder+fileName,
                             entries[i].title,
                             entries[i].published,
-                            entries[i].feed.name
+                            podcastName
                         );
                     }
       			} // End file does not exist statement
@@ -205,7 +206,7 @@ function downloadPodcast(podcastUrl, podFolder) {
                         /*setMetaData(podFolder+fileName,
                             attemptEntry.entry.title,
                             attemptEntry.entry.published,
-                            attemptEntry.entry.feed.name
+                            podcastName
                         );*/
 
     					faillogLines.splice(i,1);
