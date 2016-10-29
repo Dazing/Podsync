@@ -69,7 +69,7 @@ catch (errAcc) {
     // File dooes not exist
     if (errAcc.code === "ENOENT") {
         // Create master folder
-        catch (errDir) {console.log(errDir);}
+        catch (errAcc) {console.log(errAcc);}
     }
     // General error clause
     else {
