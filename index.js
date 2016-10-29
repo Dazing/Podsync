@@ -41,8 +41,7 @@ feed(rss_url, function(err, entries) {
                 }
             }
 
-            console.log(fileExist);
-  			console.log("i:"+i+", "+fileName+", "+fileExist+"\n");
+
 
   			// If file does exist, end loop and retry previusly failed pods
   			if (fileExist) {
@@ -51,7 +50,6 @@ feed(rss_url, function(err, entries) {
 					entry: entries[i],
 					attempts: 0
 				}
-				console.log(JSON.stringify(failedEntry));
 				failedList.push(JSON.stringify(failedEntry));
                 // TODO TESTING END
 
@@ -86,9 +84,6 @@ feed(rss_url, function(err, entries) {
 				tmpLineLink = faillogLines[i];
 				console.log("\n\n MATCHING");
 				var test = 1+(parseInt(failedList[j].attempts));
-				//console.log(parseInt(failedList[j].attempts));
-				//console.log("tmpLL:"+tmpLineLink);
-				//console.log("failList:"+failedList[j]);
 				if (failedList[j].entry === tmpLineLink.entry) {
 					failedList.splice(j,1);
 
@@ -99,13 +94,13 @@ feed(rss_url, function(err, entries) {
 			// Attempt to download again, with 3 days limit.
 
 			// TODO TEST
-            console.log("j="+i+", faillogLines.length="+faillogLines.length);
     	    if (faillogLines[i] == "") {
-                console.log("if empty for j = "+i);
                 continue;
             }
 
-
+            console.log("LOGGING faillogLines["+i+"]: \n\n ");
+            console.log("'"+faillogLines[i]+"'");
+            console.log("------------------------------------------------");
 
             attemptEntry = JSON.parse(faillogLines[i]);
             console.log("LOGGING attemptEntry: \n\n ");
