@@ -121,11 +121,11 @@ function downloadPodcast(podcastUrl, podFolder) {
                     }
                     // If successful set meta data
                     else {
-                        setMetaData(podFolder+fileName,
+                        /*setMetaData(podFolder+fileName,
                             entries[i].title,
                             entries[i].published,
                             entries[i].feed.name
-                        );
+                        );*/
                     }
       			} // End file does not exist statement
 
@@ -186,11 +186,11 @@ function downloadPodcast(podcastUrl, podFolder) {
     				}
     				// Attempt to download file successful: remove it from file.
     				else {
-                        setMetaData(podFolder+fileName,
+                        /*setMetaData(podFolder+fileName,
                             attemptEntry.entry.title,
                             attemptEntry.entry.published,
                             attemptEntry.entry.feed.name
-                        );
+                        );*/
 
     					faillogLines.splice(i,1);
     					continue;
@@ -215,6 +215,15 @@ function downloadPodcast(podcastUrl, podFolder) {
     		file.end();
     	}
     });
+
+
+    setMetaData(
+        '/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3',
+        'Has The Latest Mars Ladner Failed',
+        '2016-03-26',
+        'Science In Action'
+    );
+
 }
 
 function fileNameFormater(title) {
