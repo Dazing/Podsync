@@ -139,7 +139,7 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     					failedList.push(JSON.stringify(failedEntry));
 
                     }
-                    
+
       			} // End file does not exist statement
 
       		} // End RSS entry loop
@@ -290,7 +290,7 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     // TODO Format date 2016-10-20T21:32:00.000Z
     console.log("setmetadata for fileUrl: "+fileUrl+", fileTitle: "+fileTitle+", album: "+podcastName);
     var data = {
-        title: fileTitle,
+        title: fileTitle.toString(),
         album: podcastName
     }
     var success = nodeID3.write(data, fileUrl);
