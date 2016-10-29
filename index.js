@@ -10,6 +10,9 @@ var failedList = [];
 var failogLines;
 
 var podFolder = '/srv/samba/ArcServer/Media/Podcasts/';
+var opt = {
+	cwd: podFolder
+};
 
 rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
 
@@ -18,18 +21,9 @@ feed(rss_url, function(err, entries) {
 
   	if (err) throw err;
   	else {
-		// DEBUG logs
-  		console.log(entries[0].feed)
-  		console.log(entries[0].link)
-  		console.log(entries[0].title.replace(/[^a-zA-Z ]/g, '').replace(/ /gi,'_'));
-
-  		var opt = {
-  			cwd: podFolder
-  		}
-  		console.log("df");
 
   		for (var i = 0; i < entries.length-1; i++) {
-   			fileTitle = fileNameFormater(entries[i].title);
+   			fileName = fileNameFormater(entries[i].title);
 
 			fileExist = fs.existsSync(podFolder+fileName)
 
@@ -97,38 +91,63 @@ feed(rss_url, function(err, entries) {
 				continue;
 			}
 			else {
-				wget = spawnSync(
-						'wget',
-						[	'--no-verbose',
-							'--output-document='+fileName,
-							attemptEntry.link
-							],
-						opt
-					);
+				// Get proper fileName
+				fileName = fileNameFormater(attemptEntry);
+				// Run the wget command to download
+				wget = wgetSpawnSync(attemptEntry.link,fileName,opt);
 
+				// Attempt to download file NOT successful:
+				// increment attemps variable, change in array for write back
 				if (wget.status != 0) {
 					attemptEntry.attempts = attemptEntry.attempts + 1;
-					failedList[j] = attemptEntry;
+					failedList[j] = JSON.stringify(attemptEntry);
 				}
+				// Attempt to download file successful: remove it from file.
 				else {
-					failedList.splice(i,1);
-					continue;d
+					failogLines.splice(i,1);
+					continue;
 				}
 			}
 		}
 
-		// TODO Append remaining list to file
-  	}
+		// Append remaining list to file
+		Array.prototype.push.apply(failogLines, failedList);
+		// Write to file;
+		var file = fs.createWriteStream('array.txt');
+
+		file.on('error', function(err) {
+			console.log('Fail for write stream');
+		});
+
+		for (var i = 0; i < failogLines.length; i++) {
+			file.write(failogLines[i] + '\n');
+		}
+		
+		file.end();
+	}
 });
+
+function wgetSpawnSync(link, argFileName, options) {
+	var tmpWget = spawnSync(
+			'wget',
+			[	'--no-verbose',
+				'--output-document='+argFileName,
+				link
+				],
+			options
+		);
+
+	return tmpWget;
+}
 
 function fileNameFormater(title) {
 	// Remove all special characters but space
-	fileTitle = title.replace(/[^a-zA-Z ]/g, '');
+	title = title.replace(/[^a-zA-Z ]/g, '');
 	// Replace all spaces with underscore
-	fileTitle = fileTitle.replace(/ /gi,'_')
+	title = title.replace(/ /gi,'_')
 	// Append '.mp3'
-	fileName = fileTitle + '.mp3';
-	return fileName;
+	title = title + '.mp3';
+	return title;
 }
 
 /*
