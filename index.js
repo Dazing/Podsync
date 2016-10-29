@@ -104,7 +104,7 @@ feed(rss_url, function(err, entries) {
 
             attemptEntry = JSON.parse(faillogLines[i]);
             console.log("LOGGING stringify of attemptEntry.title: \n\n ");
-            console.log("'"+JSON.stringify(attemptEntry.title)+"'");
+            console.log("'"+JSON.stringify(attemptEntry.entry.title)+"'");
             console.log("------------------------------------------------");
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
@@ -112,7 +112,7 @@ feed(rss_url, function(err, entries) {
 			}
 			else {
 				// Get proper fileName
-				fileName = fileNameFormater(attemptEntry.title);
+				fileName = fileNameFormater(attemptEntry.entry.title);
 				// Run the wget command to download
 				downloadSuccces = downloadFile(
                     attemptEntry.link,
