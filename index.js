@@ -104,7 +104,7 @@ feed(rss_url, function(err, entries) {
             }
 
             console.log("LOGGING failogLines[j]: \n\n ");
-            console.log(failogLines[j]);
+            console.log("'"+failogLines[j]+"'");
             console.log("------------------------------------------------");
 
             attemptEntry = JSON.parse(failogLines[j]);
