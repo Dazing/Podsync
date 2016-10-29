@@ -1,6 +1,7 @@
 {
-    "masterFolder" : "",
+    "masterFolder" : "/srv/samba/ArcServer/Media/Podcasts/",
     "useSubFolders": true,
+    "interval": 60,
     "podcastList" : [
         {
             "url": "http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss",

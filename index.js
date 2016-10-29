@@ -18,34 +18,63 @@ var opt = {
 };
 
 rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
-/*
+
 var subFolder;
 var podUrl;
+
+// Make sure master folder exists
+try {
+    fs.accessSync(config.masterFolder+subFolder, fs.constants.F_OK);
+}
+// Catch error and set varibles accordningly
+catch (errAcc) {
+    // File dooes not exist
+    if (errAcc.code === "ENOENT") {
+        console.log("ENOENT for "+fileName);
+        // Create subfolder
+        try {fs.mkdirSync(config.masterFolder)}
+        catch (errDir) {console.log(errDir);}
+    }
+    // General error clause
+    else {
+        throw errAcc;
+    }
+}
+
+// Make sure all subfolders exists
 for (var i = 0; i < config.podcastList.length; i++) {
     subFolder = config.podcastList[i].folderName;
-    podUrl = config.podcastList[i].url;
+
+    // If subfolders are enabled: make sure subfolder exists, else create it.
     if (config.useSubFolders) {
         try {
             fs.accessSync(config.masterFolder+subFolder, fs.constants.F_OK);
         }
         // Catch error and set varibles accordningly
-        catch (error) {
+        catch (errAcc) {
             // File dooes not exist
-            if (error.code === "ENOENT") {
+            if (errAcc.code === "ENOENT") {
                 console.log("ENOENT for "+fileName);
-
+                // Create subfolder
+                try {fs.mkdirSync(config.masterFolder+subFolder)}
+                catch (errDir) {console.log(errDir);}
             }
             // General error clause
             else {
-                throw error;
+                throw errAcc;
             }
         }
     }
-
-    downloadPodcast(subFolder, podUrl);
 }
-*/
-//function downloadPodcast(podcastUrl, podFolder) {
+
+downloadStart()
+setInterval(downloadStart(), config.interval * 60000);
+
+function downloadStart(){
+
+}
+
+function downloadPodcast(podcastUrl, podFolder) {
 
     feed(rss_url, function(err, entries) {
 
@@ -175,7 +204,7 @@ for (var i = 0; i < config.podcastList.length; i++) {
     		file.end();
     	}
     });
-//}
+}
 
 /*
     Function downloadFile
