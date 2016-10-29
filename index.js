@@ -145,19 +145,19 @@ feed(rss_url, function(err, entries) {
 /*
     Function downloadFile
 
-    @param  link        url to the file for download
-    @param  argFileName path+name of file
+    @param  fileUrl     url to the file for download
+    @param  fileDestUrl path+name of file
     @param  options     TODO
 
     @return 0,1         0 = success, 1 = fail.
 
 */
-function downloadFile(link, argFileName, options) {
+function downloadFile(fileUrl, fileDestUrl, options) {
 	/*
     var tmpWget = spawnSync(
 			'wget',
 			[	'--no-verbose',
-				'--output-document='+argFileName,
+				'--output-document='+fileDestUrl,
 				link
 				],
 			options
@@ -165,11 +165,11 @@ function downloadFile(link, argFileName, options) {
     */
 
     var file = fs.createWriteStream
-    var request = http.get(url, function (resp){
-        resp.pipe(argFileName)
+    var request = http.get(fileUrl, function (resp){
+        resp.pipe(fileDestUrl)
     }).on('error', function (err){
         // Delete the file on error (async)
-        fs.unlink(argFileName);
+        fs.unlink(fileDestUrl);
         return 1;
     });
 	return 0;
