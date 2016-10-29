@@ -27,8 +27,11 @@ feed(rss_url, function(err, entries) {
   		for (var i = 0; i < entries.length-1; i++) {
    			fileName = fileNameFormater(entries[i].title);
 
-            fileExist = fs.statSync(podFolder+fileName).isFile();
-
+            //fileExist = fs.statSync(podFolder+fileName, (error);
+            fileExist = fs.accessSync(path, fs.constants.F_OK, (err) => {
+                console.log(err);
+            }):
+            console.log(fileExist);
   			console.log("i:"+i+", "+fileName+", "+fileExist+"\n");
 
   			// If file does exist, end loop and retry previusly failed pods
@@ -42,7 +45,7 @@ feed(rss_url, function(err, entries) {
 				failedList.push(JSON.stringify(failedEntry));
                 // TODO TESTING END
 
-                
+
   				break;
   			}
   			else {
