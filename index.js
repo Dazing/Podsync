@@ -2,7 +2,7 @@ var feed = require("feed-read");
 var spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
-var config = require(./config.js)
+var config = require('./config.js')
 
 var downloadSuccces;
 var fileName = '';
