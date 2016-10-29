@@ -28,8 +28,16 @@ feed(rss_url, function(err, entries) {
    			fileName = fileNameFormater(entries[i].title);
 
             //fileExist = fs.statSync(podFolder+fileName, (error);
-            fileExist = fs.accessSync(podFolder+fileName, fs.constants.F_OK, (err) => {
-                console.log(err);
+            fs.accessSync(podFolder+fileName, fs.constants.F_OK, (err,fd) => {
+                if (err.code === "ENOENT") {
+                    fileExist = false;
+                    return;
+                }
+                else {
+                    throw err;
+                    fileExist = true;
+                    return;
+                }
             });
             console.log(fileExist);
   			console.log("i:"+i+", "+fileName+", "+fileExist+"\n");
