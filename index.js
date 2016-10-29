@@ -65,7 +65,7 @@ setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
-        subFolder = config.masterFolder + config.podcastList[g].folderName
+        subFolder = config.masterFolder +"/"+ config.podcastList[g].folderName
         downloadPodcast(
             config.podcastList[g].url,
             subFolder
@@ -74,7 +74,7 @@ function downloadStart(){
 }
 
 function downloadPodcast(podcastUrl, podFolder) {
-
+    console.log("podFolder: " + podFolder);
     feed(podcastUrl, function(err, entries) {
 
       	if (err) throw err;
@@ -91,7 +91,7 @@ function downloadPodcast(podcastUrl, podFolder) {
                 catch (error) {
                     // File dooes not exist
                     if (error.code === "ENOENT") {
-                        console.log("ENOENT for "+fileName);
+                        //console.log("ENOENT for "+fileName);
                         fileExist = false
                     }
                     // General error clause
@@ -135,7 +135,6 @@ function downloadPodcast(podcastUrl, podFolder) {
     			// Remove the entry from failedList if already in the faillog file
     			for (var j = 0; j < failedList.length; j++) {
     				tmpLineLink = faillogLines[i];
-    				console.log("\n\n MATCHING");
     				var test = 1+(parseInt(failedList[j].attempts));
     				if (failedList[j].entry === tmpLineLink.entry) {
     					failedList.splice(j,1);
