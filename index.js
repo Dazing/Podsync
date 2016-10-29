@@ -72,6 +72,7 @@ feed(rss_url, function(err, entries) {
 		var attemptEntry;
 
 		for (var i = 0; i < faillogLines.length; i++) {
+            console.log("faillogLines: " + faillogLines);
 
 			// TODO TEST
 			// Remove the entry from failedList if already in the faillog file
@@ -104,7 +105,7 @@ feed(rss_url, function(err, entries) {
 				fileName = fileNameFormater(attemptEntry.entry.title);
 				// Run the wget command to download
 				downloadSuccces = downloadFile(
-                    attemptEntry.link,
+                    attemptEntry.entry.link,
                     podFolder+fileName,
                     opt
                 );
