@@ -68,8 +68,7 @@ try {
 catch (errAcc) {
     // File dooes not exist
     if (errAcc.code === "ENOENT") {
-        // Create master folder
-        catch (errAcc) {console.log(errAcc);}
+        console.log("ENOENT ");
     }
     // General error clause
     else {
