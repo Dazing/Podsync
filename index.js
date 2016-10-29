@@ -18,7 +18,7 @@ var podUrl;
 
 // Make sure master folder exists
 try {
-    fs.accessSync(config.masterFolder+subFolder, fs.constants.F_OK);
+    fs.accessSync(config.masterFolder, fs.constants.F_OK);
 }
 // Catch error and set varibles accordningly
 catch (errAcc) {
