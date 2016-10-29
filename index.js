@@ -105,12 +105,12 @@ feed(rss_url, function(err, entries) {
                 continue;
             }
 
-            console.log("LOGGING faillogLines["+i+"]: \n\n ");
-            console.log("'"+faillogLines[i]+"'");
-            console.log("------------------------------------------------");
+
 
             attemptEntry = JSON.parse(faillogLines[i]);
-
+            console.log("LOGGING attemptEntry: \n\n ");
+            console.log("'"+attemptEntry+"'");
+            console.log("------------------------------------------------");
 			if (attemptEntry.attempts > 72) {
 				failedList.splice(i,1);
 				continue;
