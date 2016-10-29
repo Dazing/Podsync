@@ -107,8 +107,7 @@ function downloadPodcast(podcastUrl, podFolder) {
       			else {
     				downloadSuccces = downloadFile(
                         entries[i].link,
-                        podFolder+fileName,
-                        opt
+                        podFolder+fileName
                     );
 
     				// If download failed: add to log for attempt later
@@ -168,8 +167,7 @@ function downloadPodcast(podcastUrl, podFolder) {
                     // Attempt to download the file
     				downloadSuccces = downloadFile(
                         attemptEntry.entry.link,
-                        podFolder+fileName,
-                        opt
+                        podFolder+fileName
                     );
 
     				// Attempt to download file NOT successful:
@@ -210,23 +208,11 @@ function downloadPodcast(podcastUrl, podFolder) {
 
     @param  fileUrl     url to the file for download
     @param  fileDestUrl path+name of file
-    @param  options     TODO
 
     @return 0,1         0 = success, 1 = fail.
 
 */
-function downloadFile(fileUrl, fileDestUrl, options) {
-	/*
-    var tmpWget = spawnSync(
-			'wget',
-			[	'--no-verbose',
-				'--output-document='+fileDestUrl,
-				link
-				],
-			options
-		);
-    */
-
+function downloadFile(fileUrl, fileDestUrl) {
     var file = fs.createWriteStream(fileDestUrl);
     var request = http.get(fileUrl, function (resp){
         resp.pipe(file)
