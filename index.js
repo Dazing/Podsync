@@ -60,7 +60,13 @@ for (var i = 0; i < config.podcastList.length; i++) {
     }
 }
 
-downloadStart()
+downloadStart();
+setMetaData(
+    '/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3',
+    'Has The Latest Mars Ladner Failed',
+    '2016-03-26',
+    'Science In Action'
+);
 setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
@@ -217,12 +223,7 @@ function downloadPodcast(podcastUrl, podFolder) {
     });
 
 
-    setMetaData(
-        '/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3',
-        'Has The Latest Mars Ladner Failed',
-        '2016-03-26',
-        'Science In Action'
-    );
+
 
 }
 
