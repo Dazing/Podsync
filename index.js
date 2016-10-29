@@ -12,12 +12,6 @@ var faillog = 'faillog.txt';
 var failedList = [];
 var faillogLines;
 
-var podFolder = '/srv/samba/ArcServer/Media/Podcasts/';
-var opt = {
-	cwd: podFolder
-};
-
-rss_url = 'http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss';
 
 var subFolder;
 var podUrl;
@@ -30,8 +24,7 @@ try {
 catch (errAcc) {
     // File dooes not exist
     if (errAcc.code === "ENOENT") {
-        console.log("ENOENT for "+fileName);
-        // Create subfolder
+        // Create master folder
         try {fs.mkdirSync(config.masterFolder)}
         catch (errDir) {console.log(errDir);}
     }
@@ -71,12 +64,18 @@ downloadStart()
 setInterval(downloadStart(), config.interval * 60000);
 
 function downloadStart(){
-
+    for (var g = 0; g < config.podcastList.length; g++) {
+        subFolder = config.masterFolder + config.podcastList[g].folderName
+        downloadPodcast(
+            config.podcastList[g].url,
+            subFolder
+        )
+    }
 }
 
 function downloadPodcast(podcastUrl, podFolder) {
 
-    feed(rss_url, function(err, entries) {
+    feed(podcastUrl, function(err, entries) {
 
       	if (err) throw err;
       	else {
