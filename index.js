@@ -266,8 +266,9 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
         fs.unlink(fileDestUrl);
         return 1;
     });
-    setMetaData(fileDestUrl,
+    
     res.on('finish', function (err){
+        setMetaData(fileDestUrl,
             fileTitle,
             fileDate,
             podcastName
