@@ -1,8 +1,6 @@
 var feed = require("feed-read");
-//spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
-//var nodeID3 = require('node-id3');
 var config = require('./config_mac.json')
 var request = require('request');
 
@@ -13,7 +11,6 @@ var fileExist = false;
 var faillog = 'faillog.json';
 var failedList = [];
 var faillogLines;
-
 
 var subFolder;
 var podUrl;
@@ -59,10 +56,10 @@ for (var i = 0; i < config.podcastList.length; i++) {
     }
 }
 
+// Initial download for all Pods
 downloadStart();
 
-
-
+// Look for downloads every hour
 setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
@@ -135,7 +132,12 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
       		} // End RSS entry loop
 
             // Read faillog file
-    		faillogLines = fs.readFileSync(faillog).toString().split('\n');
+			try {
+				faillogLines = fs.readFileSync(faillog).toString().split('\n');
+			} catch (e) {
+				faillogLines = [];
+			}
+
     		var tmpLineLink;
     		var attemptEntry;
 
@@ -153,7 +155,7 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     			}
 
     			// -------------------------------------------------
-    			// Attempt to download again, with 3 (1 attempt per hour)days limit.
+    			// Attempt to download again, with 3 (1 attempt per hour) days limit.
 
     			// Skip iteration if the entry is empty
         	    if (faillogLines[i] == "") {
@@ -175,20 +177,13 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     			}
     			else {
     				// Get proper fileName
-					try {
-						fileName = fileNameFormater(attemptEntry.entry.title);
-					} catch (e) {
-						console.log("FAIL FOR:" + attemptEntry);
-					}
-
+					fileName = fileNameFormater(attemptEntry.entry.title);
 
                     // Attempt to download the file
     				downloadSuccces = downloadFile(
                         attemptEntry.entry.link,
                         podFolder+fileName
                     );
-
-
 
     				// Attempt to download file NOT successful:
     				// increment attemps variable, change in array for write back
@@ -198,12 +193,6 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     				}
     				// Attempt to download file successful: remove it from file.
     				else {
-                        /*setMetaData(podFolder+fileName,
-                            attemptEntry.entry.title,
-                            attemptEntry.entry.published,
-                            podcastName
-                        );*/
-
     					faillogLines.splice(i,1);
     					continue;
     				}
@@ -221,17 +210,12 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
 
             // Write each line to file, speparete entrie with line break ()
     		for (var i = 0; i < faillogLines.length; i++) {
-				console.log("Write faillog DEBUG \n"+faillogLines[i]+'\n');
-    			file.write(faillogLines[i] + '\n');
+				file.write(faillogLines[i] + '\n');
     		}
 
     		file.end();
     	}
     });
-
-
-
-
 }
 
 function fileNameFormater(title) {
@@ -278,33 +262,7 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
 }
 
 
-/*
-    Function setMetaData
 
-    @param  fileUrl     url to the file for download
-    @param  fileDestUrl path+name of file
-
-    @return 0,1         0 = success, 1 = fail.
-
-*/
-
-function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
-    // TODO Format date 2016-10-20T21:32:00.000Z
-
-    var read = nodeID3.read(fileUrl);
-
-    //returns tags
-    console.log(read);
-    console.log("setmetadata for fileUrl: "+fileUrl+", fileTitle: "+fileTitle+", album: "+podcastName);
-    var data = {
-        title: fileTitle.toString(),
-        album: podcastName.toString()
-    }
-    var success = nodeID3.write(data, fileUrl);
-    console.log("setMetaData: " + success);
-
-
-}
 
 function validateJSON(entry) {
 	try {
