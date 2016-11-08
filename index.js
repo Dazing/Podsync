@@ -1,16 +1,16 @@
 var feed = require("feed-read");
-var spawnSync = require('child_process').spawnSync;
+//spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var http = require('http');
-var nodeID3 = require('node-id3');
-var config = require('./config.json')
+//var nodeID3 = require('node-id3');
+var config = require('./config_mac.json')
 var request = require('request');
 
 var downloadSuccces;
 var fileName = '';
 var fileTitle = '';
 var fileExist = false;
-var faillog = 'faillog.txt';
+var faillog = 'faillog.json';
 var failedList = [];
 var faillogLines;
 
@@ -26,9 +26,7 @@ try {
 catch (errAcc) {
     // File dooes not exist
     if (errAcc.code === "ENOENT") {
-        // Create master folder
-        try {fs.mkdirSync(config.masterFolder)}
-        catch (errDir) {console.log(errDir);}
+        console.log("Master folder could not be found, check the folder path");
     }
     // General error clause
     else {
@@ -62,37 +60,25 @@ for (var i = 0; i < config.podcastList.length; i++) {
 }
 
 downloadStart();
-try {
-    fs.accessSync("/srv/samba/ArcServer/Media/Podcasts/Science_In_Action/Has_the_Latest_Mars_Lander_Failed.mp3", fs.constants.F_OK);
-}
-// Catch error and set varibles accordningly
-catch (errAcc) {
-    // File dooes not exist
-    if (errAcc.code === "ENOENT") {
-        console.log("ENOENT ");
-    }
-    // General error clause
-    else {
-        throw errAcc;
-    }
-}
+
 
 
 setInterval(downloadStart, config.interval * 60000);
 
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
-        subFolder = config.masterFolder + config.podcastList[g].folderName + "/"
+        subFolder = config.masterFolder + config.podcastList[g].folderName + "/";
+		console.log("Starting download");
         downloadPodcast(
             config.podcastList[g].url,
             subFolder,
             config.podcastList[g].podcastName
-        )
+        );
     }
+
 }
 
 function downloadPodcast(podcastUrl, podFolder, podcastName) {
-    console.log("podFolder: " + podFolder);
     feed(podcastUrl, function(err, entries) {
 
       	if (err) throw err;
@@ -137,7 +123,10 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
                             entry : entries[i],
                             attempts : 0
                         }
-    					failedList.push(JSON.stringify(failedEntry));
+						if (validateJSON(failedEntry)) {
+							failedList.push(JSON.stringify(failedEntry));
+						}
+
 
                     }
 
@@ -171,6 +160,10 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
                     continue;
                 }
 
+				if (!(validateJSON(faillogLines[i]))) {
+					continue;
+				}
+
                 // Turn string from file into JSON
                 attemptEntry = JSON.parse(faillogLines[i]);
 
@@ -182,7 +175,12 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     			}
     			else {
     				// Get proper fileName
-    				fileName = fileNameFormater(attemptEntry.entry.title);
+					try {
+						fileName = fileNameFormater(attemptEntry.entry.title);
+					} catch (e) {
+						console.log("FAIL FOR:" + attemptEntry);
+					}
+
 
                     // Attempt to download the file
     				downloadSuccces = downloadFile(
@@ -216,13 +214,14 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     		Array.prototype.push.apply(faillogLines, failedList);
 
     		// Write to file;
-    		var file = fs.createWriteStream('faillog.txt');
+    		var file = fs.createWriteStream('faillog.json');
     		file.on('error', function(err) {
     			console.log('Fail for write stream:'+err);
     		});
 
             // Write each line to file, speparete entrie with line break ()
     		for (var i = 0; i < faillogLines.length; i++) {
+				console.log("Write faillog DEBUG \n"+faillogLines[i]+'\n');
     			file.write(faillogLines[i] + '\n');
     		}
 
@@ -266,13 +265,14 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
         fs.unlink(fileDestUrl);
         return 1;
     });
-    
+
     res.on('finish', function (err){
-        setMetaData(fileDestUrl,
+        /*setMetaData(fileDestUrl,
             fileTitle,
             fileDate,
             podcastName
-        );
+        );*/
+		console.log("Episode download finished");
         return 0;
     });
 }
@@ -304,6 +304,15 @@ function setMetaData(fileUrl, fileTitle, fileDate, podcastName) {
     console.log("setMetaData: " + success);
 
 
+}
+
+function validateJSON(entry) {
+	try {
+		JSON.parse(entry);
+	} catch (e) {
+		return false;
+	}
+	return true;
 }
 
 

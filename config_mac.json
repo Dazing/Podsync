@@ -1,0 +1,47 @@
+{
+    "masterFolder" : "/Users/Dazing/GitHub/Podsync/Podcasts/",
+    "useSubFolders": true,
+    "interval": 60,
+    "podcastList" : [
+        {
+            "url": "http://www.bbc.co.uk/programmes/p002vsnb/episodes/downloads.rss",
+            "folderName": "Science_In_Action",
+            "podcastName" : "Science In Action"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p002w6r2/episodes/downloads.rss",
+            "folderName": "Click",
+            "podcastName" : "Click"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p016tmt2/episodes/downloads.rss",
+            "folderName": "The_Science_Hour",
+            "podcastName" : "The Science Hour"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p03bv899/episodes/downloads.rss",
+            "folderName": "Space",
+            "podcastName" : "Space"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p02pc9zz/episodes/downloads.rss",
+            "folderName": "The_BBC_Academy",
+            "podcastName" : "The BBC Academy"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p02pc9ny/episodes/downloads.rss",
+            "folderName": "5_Live_Science",
+            "podcastName" : "5 Live Science"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p01plr2p/episodes/downloads.rss",
+            "folderName": "Tech_Tent",
+            "podcastName" : "Tech Tent"
+        },
+        {
+            "url": "http://www.bbc.co.uk/programmes/p02tb8vq/episodes/downloads.rss",
+            "folderName": "World_Business_Report",
+            "podcastName" : "World Business Report"
+        }
+    ]
+}
