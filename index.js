@@ -1,7 +1,7 @@
 var feed = require("feed-read");
 var fs = require('fs');
 var http = require('http');
-var config = require('./config_mac.json')
+var config = require('./config.json')
 var request = require('request');
 
 var downloadSuccces;
