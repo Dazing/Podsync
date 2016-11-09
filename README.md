@@ -4,11 +4,14 @@ Simple Node JS client for continously downloading podcasts to your media server/
 
 ## Install
 
-1: Clone or download the repository.\n
+1: Clone or download the repository.
+
 2: Run
+
 ```
 	npm install
 ```
+
 3: Copy "config_sample.json" to "config.json" and fill in the values and Podcasts that you want the program to download, see the docs down below for more information.
 
 ## Docs
