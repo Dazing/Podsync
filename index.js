@@ -1,9 +1,12 @@
+// Import/require needed libraries.
 var feed = require("feed-read");
 var fs = require('fs');
 var http = require('http');
 var config = require('./config.json')
 var request = require('request');
 
+
+// Create needed variables.
 var downloadSuccces;
 var fileName = '';
 var fileTitle = '';
@@ -11,7 +14,6 @@ var fileExist = false;
 var faillog = 'faillog.json';
 var failedList = [];
 var faillogLines;
-
 var subFolder;
 var podUrl;
 
@@ -62,10 +64,14 @@ downloadStart();
 // Look for downloads every hour
 setInterval(downloadStart, config.interval * 60000);
 
+
+// TODO ADD FUNCTION COMMENT
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
+		// Full path for the subfolder
         subFolder = config.masterFolder + config.podcastList[g].folderName + "/";
-		console.log("Starting download");
+
+		// Start downloading the current podcast
         downloadPodcast(
             config.podcastList[g].url,
             subFolder,
@@ -75,6 +81,7 @@ function downloadStart(){
 
 }
 
+// TODO ADD FUNCTION COMMENT
 function downloadPodcast(podcastUrl, podFolder, podcastName) {
     feed(podcastUrl, function(err, entries) {
 
@@ -108,10 +115,7 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
       			else {
     				downloadSuccces = downloadFile(
                         entries[i].link,
-                        podFolder+fileName,
-                        entries[i].title,
-                        entries[i].published,
-                        podcastName
+                        podFolder+fileName
                     );
 
     				// If download failed: add to log for attempt later
@@ -218,6 +222,15 @@ function downloadPodcast(podcastUrl, podFolder, podcastName) {
     });
 }
 
+
+/*
+    Function fileNameFormater
+
+    @param  title		String to format.
+
+    @return string     	Formated string.
+
+*/
 function fileNameFormater(title) {
 	// Remove all special characters but space
 	title = title.replace(/[^a-zA-Z ]/g, '');
@@ -231,14 +244,15 @@ function fileNameFormater(title) {
 /*
     Function downloadFile
 
+	Handles the download giv
+
     @param  fileUrl     url to the file for download
-    @param  fileDestUrl path+name of file
+    @param  fileDestUrl path+name of file for saving
 
     @return 0,1         0 = success, 1 = fail.
 
 */
-
-function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
+function downloadFile(fileUrl, fileDestUrl) {
     var file = fs.createWriteStream(fileDestUrl);
     var res = http.get(fileUrl, function (resp){
         resp.pipe(file)
@@ -251,19 +265,22 @@ function downloadFile(fileUrl, fileDestUrl, fileTitle, fileDate, podcastName) {
     });
 
     res.on('finish', function (err){
-        /*setMetaData(fileDestUrl,
-            fileTitle,
-            fileDate,
-            podcastName
-        );*/
 		console.log("Episode download finished");
         return 0;
     });
 }
 
 
+/*
+    Function validateJSON
 
+	Validates if a given string is a valid JSON object.
 
+    @param  entry		String to validate.
+
+    @return boolean		True if the string is valid, else false.
+
+*/
 function validateJSON(entry) {
 	try {
 		JSON.parse(entry);
