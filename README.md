@@ -1,12 +1,19 @@
 # Podsync
-Simple Node JS client for continously downloading podcasts to your media server/device from a RSS feed supported on Mac OS and Linux.
+
+Simple Node JS client for continuously downloading podcasts to your media server/device from a RSS feed supported on Mac OS and Linux.
 ---
 
-## Install
+## Installation
+
+### Prerequisites:
+
+Node 6.9.x (LTS), internet connection (doh!).
+
+### Installing
 
 1: Clone or download the repository.
 
-2: Run
+2: Navigate to the repository folder and run (this will install dependencies):
 
 ```
 	npm install
