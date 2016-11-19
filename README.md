@@ -1,4 +1,4 @@
-# Podsync
+"# Podsync
 
 Simple Node JS client for continuously downloading podcasts to your media server/device from a RSS feed supported on Mac OS and Linux.
 ---
@@ -23,7 +23,7 @@ Node 6.9.x (LTS), internet connection (doh!).
 
 ## Docs
 ### Config.json
-    "masterFolder" : "path/to/podcast/MasterFolder",
+    "masterFolder" : "path/to/podcast/MasterFolder/",
         The folder where all you podcasts or subfolders, if enabled, are located.
     "useSubFolders": true,
         Boolean (true/false), if true put podcasts in subfolders (name defined in list of podcasts) in masterFolder.
@@ -32,6 +32,10 @@ Node 6.9.x (LTS), internet connection (doh!).
     "podcastList" : [
         {
             "url": "rss_url_to_podcast",
+				Weblink to the rss site.
+			"extension" : ".mp3",
+				Extension for the files to be saved, IE ".mp3" or ".mp4".
             "folderName": "podcast_sub_folder"
         }
     ]
+"

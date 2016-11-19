@@ -2,8 +2,7 @@
 var feed = require("feed-read");
 var fs = require('fs');
 var http = require('http');
-var config = require('./config.json')
-var request = require('request');
+var config = require('./config.json');
 
 
 // Create needed variables.
@@ -33,16 +32,15 @@ catch (errAcc) {
     }
 }
 
-// Make sure all subfolders exists
-for (var i = 0; i < config.podcastList.length; i++) {
-    subFolder = config.podcastList[i].folderName;
+// If subfolders are enabled: make sure subfolder exists, else create it.
+if (config.useSubFolders) {
+	for (var i = 0; i < config.podcastList.length; i++) {
+    	subFolder = config.podcastList[i].folderName;
 
-    // If subfolders are enabled: make sure subfolder exists, else create it.
-    if (config.useSubFolders) {
         try {
             fs.accessSync(config.masterFolder+subFolder, fs.constants.F_OK);
         }
-        // Catch error and set varibles accordningly
+        // Catch error and create directory
         catch (errAcc) {
             // File dooes not exist
             if (errAcc.code === "ENOENT") {
@@ -58,10 +56,11 @@ for (var i = 0; i < config.podcastList.length; i++) {
     }
 }
 
+
 // Initial download for all Pods
 downloadStart();
 
-// Look for downloads every hour
+// Run the download function every hour from startup
 setInterval(downloadStart, config.interval * 60000);
 
 
@@ -69,26 +68,42 @@ setInterval(downloadStart, config.interval * 60000);
 function downloadStart(){
     for (var g = 0; g < config.podcastList.length; g++) {
 		// Full path for the subfolder
-        subFolder = config.masterFolder + config.podcastList[g].folderName + "/";
+		if (config.useSubFolders) {
+			subFolder = config.masterFolder + config.podcastList[g].folderName + "/";
+		}
+		else {
+			subFolder = config.masterFolder
+		}
 
 		// Start downloading the current podcast
         downloadPodcast(
             config.podcastList[g].url,
-            subFolder,
-            config.podcastList[g].podcastName
+			config.podcastList[g].extension,
+            subFolder
         );
     }
-
 }
 
-// TODO ADD FUNCTION COMMENT
-function downloadPodcast(podcastUrl, podFolder, podcastName) {
+/*
+
+    Function downloadPodcast
+
+	Downloads podcasts file from an rss feed until it reaches one thats already
+	downloaded, if a download fails its added in the failog and will be
+	downloaded at a later time.
+
+    @param  podcastUrl		Download url (the rss feed).
+	@param  podFolder		Folder to put downloaded files in.
+
+*/
+function downloadPodcast(podcastUrl, extension,podFolder) {
     feed(podcastUrl, function(err, entries) {
 
       	if (err) throw err;
       	else {
       		for (var i = 0; i < entries.length-1; i++) {
        			fileName = fileNameFormater(entries[i].title);
+				fileName = fileName + extension;
 
                 // Check if the file already exists
                 try {
@@ -237,7 +252,8 @@ function fileNameFormater(title) {
 	// Replace all spaces with underscore
 	title = title.replace(/ /gi,'_')
 	// Append '.mp3'
-	title = title + '.mp3';
+	title = title
+
 	return title;
 }
 
@@ -265,7 +281,6 @@ function downloadFile(fileUrl, fileDestUrl) {
     });
 
     res.on('finish', function (err){
-		console.log("Episode download finished");
         return 0;
     });
 }
